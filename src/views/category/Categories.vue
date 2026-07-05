@@ -8,12 +8,14 @@ import Pagination from '../../components/Pagination.vue'
 import DeleteConfirmModal from '../../components/DeleteConfirmModal.vue'
 import LoadingState from '../../components/LoadingState.vue'
 import EmptyState from '../../components/EmptyState.vue'
+import CategoryDetailModal from './CategoryDetailModal.vue'
 import { 
   Plus, 
   Search, 
   Edit2, 
   Trash2, 
-  FolderTree
+  FolderTree,
+  Eye
 } from '@lucide/vue'
 
 const { addToast } = useToast()
@@ -27,6 +29,7 @@ const currentPage = ref(1)
 // Modal states
 const isFormOpen = ref(false)
 const isDeleteOpen = ref(false)
+const isDetailOpen = ref(false)
 
 const selectedCategory = ref(null)
 const isSubmitting = ref(false)
@@ -68,6 +71,11 @@ const openCreate = () => {
 const openEdit = (cat) => {
   selectedCategory.value = cat
   isFormOpen.value = true
+}
+
+const openDetail = (cat) => {
+  selectedCategory.value = cat
+  isDetailOpen.value = true
 }
 
 const openDelete = (cat) => {
@@ -188,6 +196,13 @@ const confirmDelete = async () => {
                 </td>
                 <td class="px-6 py-4 text-right space-x-2.5">
                   <button 
+                    @click="openDetail(cat)"
+                    class="p-1 text-slate-400 hover:text-emerald-600 transition-colors cursor-pointer inline-block"
+                    title="View Category Details & Audits"
+                  >
+                    <Eye class="w-4 h-4" />
+                  </button>
+                  <button 
                     @click="openEdit(cat)"
                     class="p-1 text-slate-400 hover:text-blue-600 transition-colors cursor-pointer inline-block"
                     title="Edit Category"
@@ -219,6 +234,13 @@ const confirmDelete = async () => {
 
       </div>
     </div>
+
+    <!-- Category Detail Modal Mount -->
+    <CategoryDetailModal 
+      :is-open="isDetailOpen"
+      :category="selectedCategory"
+      @close="isDetailOpen = false"
+    />
 
     <!-- Category Form Modal Mount -->
     <CategoryFormModal 

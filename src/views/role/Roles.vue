@@ -8,12 +8,14 @@ import Pagination from '../../components/Pagination.vue'
 import DeleteConfirmModal from '../../components/DeleteConfirmModal.vue'
 import LoadingState from '../../components/LoadingState.vue'
 import EmptyState from '../../components/EmptyState.vue'
+import RoleDetailModal from './RoleDetailModal.vue'
 import { 
   Plus, 
   Search, 
   Edit2, 
   Trash2, 
-  ShieldCheck
+  ShieldCheck,
+  Eye
 } from '@lucide/vue'
 
 const { addToast } = useToast()
@@ -27,6 +29,7 @@ const currentPage = ref(1)
 // Modal states
 const isFormOpen = ref(false)
 const isDeleteOpen = ref(false)
+const isDetailOpen = ref(false)
 
 const selectedRole = ref(null)
 const isSubmitting = ref(false)
@@ -68,6 +71,11 @@ const openCreate = () => {
 const openEdit = (role) => {
   selectedRole.value = role
   isFormOpen.value = true
+}
+
+const openDetail = (role) => {
+  selectedRole.value = role
+  isDetailOpen.value = true
 }
 
 const openDelete = (role) => {
@@ -178,6 +186,13 @@ const confirmDelete = async () => {
                 <td class="px-6 py-4 text-slate-550 font-mono">{{ role.guard_name }}</td>
                 <td class="px-6 py-4 text-right space-x-2.5">
                   <button 
+                    @click="openDetail(role)"
+                    class="p-1 text-slate-400 hover:text-emerald-600 transition-colors cursor-pointer inline-block"
+                    title="View Role Details & Audits"
+                  >
+                    <Eye class="w-4 h-4" />
+                  </button>
+                  <button 
                     @click="openEdit(role)"
                     class="p-1 text-slate-400 hover:text-blue-600 transition-colors cursor-pointer inline-block"
                     title="Edit Role"
@@ -209,6 +224,13 @@ const confirmDelete = async () => {
 
       </div>
     </div>
+
+    <!-- Role Detail Modal Mount -->
+    <RoleDetailModal 
+      :is-open="isDetailOpen"
+      :role="selectedRole"
+      @close="isDetailOpen = false"
+    />
 
     <!-- Role Form Modal mount -->
     <RoleFormModal 

@@ -2,6 +2,7 @@
 import { computed } from 'vue'
 import { X, FileText, Image as ImageIcon, ExternalLink } from '@lucide/vue'
 import { getAssetUrl, formatPrice } from '../../utils/helpers'
+import AuditHistorySection from '../../components/AuditHistorySection.vue'
 
 const props = defineProps({
   isOpen: Boolean,
@@ -130,6 +131,12 @@ const attributesList = computed(() => {
           </table>
         </div>
       </div>
+
+      <!-- Audit History Logs -->
+      <AuditHistorySection 
+        type="product" 
+        :id="product.id" 
+      />
 
     </div>
   </div>

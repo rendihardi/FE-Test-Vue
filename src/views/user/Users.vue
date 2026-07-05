@@ -11,12 +11,14 @@ import Pagination from '../../components/Pagination.vue'
 import DeleteConfirmModal from '../../components/DeleteConfirmModal.vue'
 import LoadingState from '../../components/LoadingState.vue'
 import EmptyState from '../../components/EmptyState.vue'
+import UserDetailModal from './UserDetailModal.vue'
 import { 
   Plus, 
   Search, 
   Edit2, 
   Trash2, 
-  UserCheck
+  UserCheck,
+  Eye
 } from '@lucide/vue'
 
 const { addToast } = useToast()
@@ -32,6 +34,7 @@ const currentPage = ref(1)
 // Modal states
 const isFormOpen = ref(false)
 const isDeleteOpen = ref(false)
+const isDetailOpen = ref(false)
 
 const selectedUser = ref(null)
 const isSubmitting = ref(false)
@@ -85,6 +88,11 @@ const openCreate = () => {
 const openEdit = (user) => {
   selectedUser.value = user
   isFormOpen.value = true
+}
+
+const openDetail = (user) => {
+  selectedUser.value = user
+  isDetailOpen.value = true
 }
 
 const openDelete = (user) => {
@@ -209,6 +217,13 @@ const confirmDelete = async () => {
                 <td class="px-6 py-4 text-slate-400">{{ formatDateTime(user.created_at) }}</td>
                 <td class="px-6 py-4 text-right space-x-2.5">
                   <button 
+                    @click="openDetail(user)"
+                    class="p-1 text-slate-400 hover:text-emerald-600 transition-colors cursor-pointer inline-block"
+                    title="View User Details & Audits"
+                  >
+                    <Eye class="w-4 h-4" />
+                  </button>
+                  <button 
                     @click="openEdit(user)"
                     class="p-1 text-slate-400 hover:text-blue-600 transition-colors cursor-pointer inline-block"
                     title="Edit User"
@@ -240,6 +255,13 @@ const confirmDelete = async () => {
 
       </div>
     </div>
+
+    <!-- User Detail Modal Mount -->
+    <UserDetailModal 
+      :is-open="isDetailOpen"
+      :user="selectedUser"
+      @close="isDetailOpen = false"
+    />
 
     <!-- User Form Modal mount -->
     <UserFormModal 
