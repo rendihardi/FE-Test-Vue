@@ -171,7 +171,7 @@ const handleLogin = async () => {
         </form>
 
         <!-- Demo accounts cheat sheet -->
-        <div class="pt-4 border-t border-slate-800/80">
+        <!-- <div class="pt-4 border-t border-slate-800/80">
           <p class="text-xs font-semibold text-slate-400 mb-2.5">Demo Account Credentials:</p>
           <div class="space-y-2 text-[11px] text-slate-500 font-mono">
             <div class="flex justify-between bg-slate-950/40 p-2 rounded border border-slate-850">
@@ -187,7 +187,7 @@ const handleLogin = async () => {
               <span class="text-slate-400">konfirmasi</span>
             </div>
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>

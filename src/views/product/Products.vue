@@ -359,6 +359,7 @@ const confirmDelete = async () => {
                 <th class="px-6 py-3.5 tracking-wider">Category</th>
                 <th class="px-6 py-3.5 tracking-wider">Price (IDR)</th>
                 <th class="px-6 py-3.5 tracking-wider">Current Stock</th>
+                <th class="px-6 py-3.5 tracking-wider">Stock Status</th>
                 <th class="px-6 py-3.5 tracking-wider">Document</th>
                 <th class="px-6 py-3.5 tracking-wider">Status</th>
                 <th class="px-6 py-3.5 tracking-wider text-right">Actions</th>
@@ -401,22 +402,25 @@ const confirmDelete = async () => {
                 <!-- Price -->
                 <td class="px-6 py-4 font-semibold text-slate-800 font-mono">{{ formatPrice(p.price) }}</td>
 
-                <!-- Stock count -->
+                <!-- Current Stock -->
                 <td class="px-6 py-4">
-                  <div class="flex flex-col gap-1">
-                    <span :class="[
-                      'font-mono font-bold',
-                      p.current_stock <= (p.minimum_stock || 10) ? 'text-rose-600' : 'text-slate-850'
-                    ]">{{ p.current_stock }} units</span>
-                    <span v-if="p.stock_status" :class="[
-                      'inline-flex items-center w-fit px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider border',
-                      p.stock_status === 'in stock' || p.stock_status === 'safe' ? 'bg-emerald-50 text-emerald-700 border-emerald-200/30' : '',
-                      p.stock_status === 'low stock' || p.stock_status === 'low' ? 'bg-amber-50 text-amber-700 border-amber-200/30' : '',
-                      p.stock_status === 'out of stock' || p.stock_status === 'empty' ? 'bg-rose-50 text-rose-700 border-rose-200/30' : ''
-                    ]">
-                      {{ p.stock_status }}
-                    </span>
-                  </div>
+                  <span :class="[
+                    'font-mono font-bold',
+                    p.current_stock <= (p.minimum_stock || 10) ? 'text-rose-600' : 'text-slate-850'
+                  ]">{{ p.current_stock }} units</span>
+                </td>
+
+                <!-- Stock Status -->
+                <td class="px-6 py-4">
+                  <span v-if="p.stock_status" :class="[
+                    'inline-flex items-center px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider border',
+                    p.stock_status === 'in stock' || p.stock_status === 'safe' ? 'bg-emerald-50 text-emerald-700 border-emerald-200/30' : '',
+                    p.stock_status === 'low stock' || p.stock_status === 'low' ? 'bg-amber-50 text-amber-700 border-amber-200/30' : '',
+                    p.stock_status === 'out of stock' || p.stock_status === 'empty' ? 'bg-rose-50 text-rose-700 border-rose-200/30' : ''
+                  ]">
+                    {{ p.stock_status }}
+                  </span>
+                  <span v-else class="text-slate-400">-</span>
                 </td>
 
                 <!-- Docs link -->
