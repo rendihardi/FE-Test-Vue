@@ -72,6 +72,7 @@ const transactionColumns = [
   { label: 'Stock Before', value: 'stock_before' },
   { label: 'Stock After', value: 'stock_after' },
   { label: 'Transaction Date', value: 'transaction_date' },
+  { label: 'Actor', value: 'created_by' },
   { label: 'Remarks', value: 'remarks' }
 ]
 
@@ -576,6 +577,7 @@ const switchTab = (tabName) => {
                 <th class="px-6 py-3.5 tracking-wider text-right">Before</th>
                 <th class="px-6 py-3.5 tracking-wider text-right">After</th>
                 <th class="px-6 py-3.5 tracking-wider">Document</th>
+                <th class="px-6 py-3.5 tracking-wider">Actor</th>
                 <th class="px-6 py-3.5 tracking-wider">Date</th>
                 <th class="px-6 py-3.5 tracking-wider">Remarks</th>
               </tr>
@@ -617,6 +619,9 @@ const switchTab = (tabName) => {
                     <span>View PDF</span>
                   </a>
                   <span v-else class="text-slate-400">-</span>
+                </td>
+                <td class="px-6 py-4 text-slate-700 font-medium">
+                  {{ tx.creator?.name || tx.creator_name || '-' }}
                 </td>
                 <td class="px-6 py-4 text-slate-500 whitespace-nowrap">{{ formatDateTime(tx.transaction_date) }}</td>
                 <td class="px-6 py-4 text-slate-400 max-w-[150px] truncate" :title="tx.remarks">{{ tx.remarks || '-' }}</td>

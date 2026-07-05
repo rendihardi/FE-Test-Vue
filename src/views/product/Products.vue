@@ -61,6 +61,7 @@ const productColumns = [
   { label: 'Category Name', value: 'category_name' },
   { label: 'Price', value: 'price' },
   { label: 'Current Stock', value: 'current_stock' },
+  { label: 'Stock Status', value: 'stock_status' },
   { label: 'Active Status', value: 'is_active' }
 ]
 
