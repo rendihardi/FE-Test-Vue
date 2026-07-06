@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '../store/auth'
 
 const routes = [
+  // Public routes (no layout)
   {
     path: '/',
     name: 'Landing',
@@ -14,54 +15,57 @@ const routes = [
     component: () => import('../views/Login.vue'),
     meta: { requiresAuth: false, guestOnly: true }
   },
+
+  // Dashboard routes — all share one persistent AppLayout (DashboardLayout mounted ONCE)
   {
-    path: '/dashboard',
-    name: 'Dashboard',
-    component: () => import('../views/Dashboard.vue'),
-    meta: { requiresAuth: true }
+    path: '/',
+    component: () => import('../layouts/AppLayout.vue'),
+    meta: { requiresAuth: true },
+    children: [
+      {
+        path: 'dashboard',
+        name: 'Dashboard',
+        component: () => import('../views/Dashboard.vue'),
+      },
+      {
+        path: 'roles',
+        name: 'Roles',
+        component: () => import('../views/role/Roles.vue'),
+      },
+      {
+        path: 'users',
+        name: 'Users',
+        component: () => import('../views/user/Users.vue'),
+        meta: { adminOnly: true }
+      },
+      {
+        path: 'categories',
+        name: 'Categories',
+        component: () => import('../views/category/Categories.vue'),
+      },
+      {
+        path: 'products',
+        name: 'Products',
+        component: () => import('../views/product/Products.vue'),
+      },
+      {
+        path: 'stock-transactions',
+        name: 'StockTransactions',
+        component: () => import('../views/transaction/StockTransactions.vue'),
+      },
+      {
+        path: 'audits',
+        name: 'Audits',
+        component: () => import('../views/audit/Audits.vue'),
+      },
+      {
+        path: 'excel-tasks',
+        name: 'ExcelTasks',
+        component: () => import('../views/excel/ExcelTasks.vue'),
+      },
+    ]
   },
-  {
-    path: '/roles',
-    name: 'Roles',
-    component: () => import('../views/role/Roles.vue'),
-    meta: { requiresAuth: true }
-  },
-  {
-    path: '/users',
-    name: 'Users',
-    component: () => import('../views/user/Users.vue'),
-    meta: { requiresAuth: true, adminOnly: true }
-  },
-  {
-    path: '/categories',
-    name: 'Categories',
-    component: () => import('../views/category/Categories.vue'),
-    meta: { requiresAuth: true }
-  },
-  {
-    path: '/products',
-    name: 'Products',
-    component: () => import('../views/product/Products.vue'),
-    meta: { requiresAuth: true }
-  },
-  {
-    path: '/stock-transactions',
-    name: 'StockTransactions',
-    component: () => import('../views/transaction/StockTransactions.vue'),
-    meta: { requiresAuth: true }
-  },
-  {
-    path: '/audits',
-    name: 'Audits',
-    component: () => import('../views/audit/Audits.vue'),
-    meta: { requiresAuth: true, adminOnly: true }
-  },
-  {
-    path: '/excel-tasks',
-    name: 'ExcelTasks',
-    component: () => import('../views/excel/ExcelTasks.vue'),
-    meta: { requiresAuth: true }
-  },
+
   // Catch-all redirect
   {
     path: '/:pathMatch(.*)*',
@@ -71,19 +75,26 @@ const routes = [
 
 const router = createRouter({
   history: createWebHistory(),
-  routes
+  routes,
+  // Scroll behavior handled by DashboardLayout's main content area
+  scrollBehavior: () => false
 })
 
 router.beforeEach((to) => {
   const authStore = useAuthStore()
 
-  if (to.meta.requiresAuth && !authStore.isLoggedIn.value) {
+  // Check auth for parent layout route and individual children
+  const requiresAuth = to.matched.some(r => r.meta?.requiresAuth)
+  const guestOnly = to.matched.some(r => r.meta?.guestOnly)
+  const adminOnly = to.matched.some(r => r.meta?.adminOnly)
+
+  if (requiresAuth && !authStore.isLoggedIn.value) {
     return { name: 'Login', query: { redirect: to.fullPath } }
   }
-  if (to.meta.guestOnly && authStore.isLoggedIn.value) {
+  if (guestOnly && authStore.isLoggedIn.value) {
     return { name: 'Dashboard' }
   }
-  if (to.meta.adminOnly && !authStore.isAdmin.value) {
+  if (adminOnly && !authStore.isAdmin.value) {
     return { name: 'Dashboard' }
   }
 })

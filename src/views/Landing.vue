@@ -6,11 +6,12 @@ import BrandLogo from '../components/BrandLogo.vue'
 import { 
   ShieldCheck, 
   Package, 
-  ArrowUpDown, 
+  BarChart3, 
   FileSpreadsheet, 
   ArrowRight,
-  TrendingUp,
-  Cpu
+  CheckCircle2,
+  Users,
+  ClipboardList
 } from '@lucide/vue'
 
 const router = useRouter()
@@ -25,193 +26,220 @@ const navigateToApp = () => {
     router.push('/login')
   }
 }
+
+const features = [
+  {
+    icon: ShieldCheck,
+    color: 'text-blue-600',
+    bg: 'bg-blue-50',
+    title: 'Role-Based Access',
+    desc: 'Granular permission control that restricts admin portals to specific authenticated administrators.'
+  },
+  {
+    icon: Package,
+    color: 'text-emerald-600',
+    bg: 'bg-emerald-50',
+    title: 'Product Catalog',
+    desc: 'Manage products with images, spec PDFs, dynamic attributes, and full category organization.'
+  },
+  {
+    icon: BarChart3,
+    color: 'text-violet-600',
+    bg: 'bg-violet-50',
+    title: 'Audit Trails',
+    desc: 'Every change is logged. Know who changed what and when, with complete before-after diff views.'
+  },
+  {
+    icon: FileSpreadsheet,
+    color: 'text-orange-600',
+    bg: 'bg-orange-50',
+    title: 'Excel Import/Export',
+    desc: 'Export and import hundreds of records with dynamic column selection via background queue jobs.'
+  }
+]
 </script>
 
 <template>
-  <div class="min-h-screen bg-slate-900 text-slate-100 flex flex-col justify-between selection:bg-blue-600 selection:text-white">
-    <!-- Top Header -->
-    <header class="h-20 max-w-7xl w-full mx-auto px-6 md:px-8 flex items-center justify-between">
-      <BrandLogo size="md" :gradientText="true" />
-      
-      <button 
-        @click="navigateToApp"
-        class="px-5 py-2.5 rounded-xl font-semibold text-sm bg-white/5 hover:bg-white/10 text-white border border-white/10 hover:border-white/20 transition-all duration-150 cursor-pointer"
-      >
-        {{ isLoggedIn ? 'Enter Dashboard' : 'Sign In' }}
-      </button>
+  <div class="min-h-screen bg-white text-slate-800 flex flex-col selection:bg-blue-600 selection:text-white" style="font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;">
+
+    <!-- Navigation Header -->
+    <header class="sticky top-0 z-50 bg-white border-b border-slate-200 shadow-sm">
+      <div class="max-w-6xl w-full mx-auto px-6 h-16 flex items-center justify-between">
+        <BrandLogo size="md" />
+        <button 
+          @click="navigateToApp"
+          class="inline-flex items-center gap-2 px-5 py-2 rounded-lg text-sm font-semibold bg-blue-600 hover:bg-blue-700 text-white transition-all duration-150 cursor-pointer shadow-sm"
+        >
+          {{ isLoggedIn ? 'Go to Dashboard' : 'Sign In' }}
+          <ArrowRight class="w-4 h-4" />
+        </button>
+      </div>
     </header>
 
-    <!-- Hero Content -->
-    <main class="flex-1 flex flex-col justify-center max-w-7xl w-full mx-auto px-6 md:px-8 py-16">
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
-        <!-- Hero Text -->
-        <div class="lg:col-span-7 space-y-8 text-left">
-          <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-semibold uppercase tracking-wider">
-            <Cpu class="w-3.5 h-3.5" />
-            <span>Enterprise Inventory System v2.0</span>
+    <!-- Hero Section -->
+    <main class="flex-1">
+      <section class="max-w-6xl mx-auto px-6 pt-20 pb-24">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+
+          <!-- Left: Text Content -->
+          <div class="space-y-7 text-left">
+            <!-- Eyebrow badge -->
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-50 border border-blue-100 text-blue-600 text-xs font-semibold">
+              <span class="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
+              <span>Inventory Management System</span>
+            </div>
+
+            <!-- Headline -->
+            <h1 class="text-4xl sm:text-5xl font-black tracking-tight leading-tight text-slate-900">
+              Manage your stock,<br />
+              <span class="text-blue-600">track every move.</span>
+            </h1>
+
+            <!-- Sub-headline -->
+            <p class="text-base sm:text-lg text-slate-500 leading-relaxed">
+              A complete inventory platform for managing products, monitoring stock transactions, generating audit trails, and running bulk Excel operations — all in one place.
+            </p>
+
+            <!-- CTA Buttons -->
+            <div class="flex flex-col sm:flex-row gap-3">
+              <button
+                @click="navigateToApp"
+                class="inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm shadow-lg shadow-blue-200 transition-all duration-150 cursor-pointer hover:-translate-y-0.5"
+              >
+                <span>{{ isLoggedIn ? 'Launch Dashboard' : 'Get Started' }}</span>
+                <ArrowRight class="w-4 h-4" />
+              </button>
+              <a
+                href="#features"
+                class="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-sm transition-all duration-150 hover:-translate-y-0.5"
+              >
+                See Features
+              </a>
+            </div>
           </div>
 
-          <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-none text-white">
-            Next-Gen Inventory <br />
-            <span class="bg-gradient-to-r from-blue-400 via-indigo-400 to-emerald-400 bg-clip-text text-transparent">
-              Control & Auditing
-            </span>
-          </h1>
+          <!-- Right: Dashboard Preview Card -->
+          <div class="relative">
+            <div class="absolute -inset-4 bg-gradient-to-br from-blue-50 to-slate-50 rounded-3xl -z-10"></div>
 
-          <p class="text-lg text-slate-400 leading-relaxed max-w-xl">
-            A secure, role-restricted dashboard designed for managing enterprise inventory catalogs, tracking stock transactional history with complete audit trails, and executing high-throughput background imports and exports.
-          </p>
+            <div class="bg-white border border-slate-200 rounded-2xl shadow-2xl shadow-slate-200/80 overflow-hidden">
+              <!-- Fake browser chrome -->
+              <div class="bg-slate-50 border-b border-slate-200 px-4 py-3 flex items-center gap-2">
+                <div class="w-2.5 h-2.5 rounded-full bg-red-400"></div>
+                <div class="w-2.5 h-2.5 rounded-full bg-yellow-400"></div>
+                <div class="w-2.5 h-2.5 rounded-full bg-green-400"></div>
+                <div class="flex-1 mx-3 bg-white border border-slate-200 rounded-md px-3 py-1 text-[10px] text-slate-400 font-mono text-left">
+                  inventory.app/dashboard
+                </div>
+              </div>
 
-          <div class="flex flex-col sm:flex-row gap-4">
-            <button
-              @click="navigateToApp"
-              class="inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-base shadow-lg shadow-blue-500/25 transition-all duration-150 cursor-pointer hover:-translate-y-0.5"
-            >
-              <span>{{ isLoggedIn ? 'Launch Workspace' : 'Get Started Now' }}</span>
-              <ArrowRight class="w-5 h-5" />
-            </button>
-            
-            <a
-              href="#features"
-              class="inline-flex items-center justify-center px-8 py-4 rounded-xl bg-slate-800 hover:bg-slate-750 text-slate-200 border border-slate-700/60 font-semibold text-base transition-all duration-150 hover:-translate-y-0.5"
-            >
-              Explore Features
-            </a>
+              <!-- Preview Content -->
+              <div class="p-5 space-y-4 text-left">
+                <!-- Stats row -->
+                <div class="grid grid-cols-3 gap-3">
+                  <div class="bg-blue-50 rounded-xl p-3 border border-blue-100">
+                    <p class="text-[10px] text-blue-500 font-semibold uppercase tracking-wide mb-1">Products</p>
+                    <p class="text-2xl font-black text-blue-700">248</p>
+                    <p class="text-[10px] text-blue-400 mt-0.5">+12 this week</p>
+                  </div>
+                  <div class="bg-emerald-50 rounded-xl p-3 border border-emerald-100">
+                    <p class="text-[10px] text-emerald-500 font-semibold uppercase tracking-wide mb-1">Stock In</p>
+                    <p class="text-2xl font-black text-emerald-700">1,480</p>
+                    <p class="text-[10px] text-emerald-400 mt-0.5">units today</p>
+                  </div>
+                  <div class="bg-violet-50 rounded-xl p-3 border border-violet-100">
+                    <p class="text-[10px] text-violet-500 font-semibold uppercase tracking-wide mb-1">Audits</p>
+                    <p class="text-2xl font-black text-violet-700">63</p>
+                    <p class="text-[10px] text-violet-400 mt-0.5">last 7 days</p>
+                  </div>
+                </div>
+
+                <!-- Transaction table preview -->
+                <div class="rounded-xl border border-slate-200 overflow-hidden">
+                  <div class="bg-slate-50 border-b border-slate-200 px-4 py-2 flex items-center justify-between">
+                    <span class="text-xs font-semibold text-slate-600">Recent Transactions</span>
+                    <span class="text-[10px] text-slate-400">Live</span>
+                  </div>
+                  <div class="divide-y divide-slate-100">
+                    <div v-for="tx in [
+                      { code: 'TRX-IN-20260706-0041', product: 'Logitech Wireless Mouse', type: 'IN', qty: 50, color: 'bg-emerald-100 text-emerald-700' },
+                      { code: 'TRX-OUT-20260706-0040', product: 'Ergonomic Office Chair', type: 'OUT', qty: 3, color: 'bg-rose-100 text-rose-700' },
+                      { code: 'TRX-ADJ-20260706-0039', product: 'Mechanical Keyboard RGB', type: 'ADJ', qty: 15, color: 'bg-amber-100 text-amber-700' },
+                    ]" :key="tx.code" class="px-4 py-2.5 flex items-center justify-between text-xs">
+                    <div class="flex items-center gap-3">
+                      <span :class="[tx.color, 'px-2 py-0.5 rounded font-bold text-[10px] uppercase']">{{ tx.type }}</span>
+                      <div>
+                        <p class="font-semibold text-slate-700">{{ tx.product }}</p>
+                        <p class="font-mono text-[10px] text-slate-400">{{ tx.code }}</p>
+                      </div>
+                    </div>
+                    <span class="font-bold text-slate-700">{{ tx.qty }} units</span>
+                  </div>
+                </div>
+              </div>
+              </div>
+            </div>
           </div>
+        </div><!-- end grid -->
+      </section>
 
-          <!-- Mini stats preview -->
-          <div class="grid grid-cols-3 gap-6 pt-6 border-t border-slate-800/80 max-w-md">
-            <div>
-              <p class="text-2xl font-bold text-white">99.99%</p>
-              <p class="text-xs text-slate-500 mt-1 uppercase tracking-wider font-semibold">Reliability</p>
-            </div>
-            <div>
-              <p class="text-2xl font-bold text-white">&lt; 150ms</p>
-              <p class="text-xs text-slate-500 mt-1 uppercase tracking-wider font-semibold">API Latency</p>
-            </div>
-            <div>
-              <p class="text-2xl font-bold text-emerald-400">Queue</p>
-              <p class="text-xs text-slate-500 mt-1 uppercase tracking-wider font-semibold">Background Jobs</p>
-            </div>
+      <!-- Social Proof / Checkmarks -->
+      <section class="border-y border-slate-100 bg-slate-50 py-10 px-6">
+        <div class="max-w-4xl mx-auto flex flex-wrap justify-center gap-x-10 gap-y-4">
+          <div v-for="item in ['Full audit trail logging', 'Role-based access control', 'Background Excel export/import', 'Real-time stock tracking', 'Soft-delete & restoration']" :key="item"
+            class="flex items-center gap-2 text-sm text-slate-600 font-medium">
+            <CheckCircle2 class="w-4 h-4 text-blue-500 shrink-0" />
+            <span>{{ item }}</span>
           </div>
         </div>
+      </section>
 
-        <!-- Right Side Glassmorphic Preview Card -->
-        <div class="lg:col-span-5 relative">
-          <!-- Ambient lighting effect -->
-          <div class="absolute -inset-4 rounded-3xl bg-blue-500/10 blur-3xl -z-10"></div>
-          
-          <div class="bg-slate-950/40 border border-slate-800/80 backdrop-blur-md rounded-2xl p-6 sm:p-8 space-y-6 shadow-2xl">
-            <div class="flex items-center justify-between pb-4 border-b border-slate-800/80">
-              <span class="text-sm font-semibold text-slate-400">System Activity</span>
-              <span class="flex items-center gap-1.5 text-xs text-emerald-400 bg-emerald-400/10 px-2 py-0.5 rounded-full font-medium">
-                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-                <span>Live Feed</span>
-              </span>
-            </div>
+      <!-- Features Section -->
+      <section id="features" class="max-w-6xl mx-auto px-6 py-24">
+        <div class="text-center mb-16">
+          <h2 class="text-3xl sm:text-4xl font-black text-slate-900 mb-4">Everything you need to manage inventory</h2>
+          <p class="text-slate-500 text-base max-w-xl mx-auto">Built for warehouses and operations teams who need precision, traceability, and efficiency.</p>
+        </div>
 
-            <!-- Fake transactions mock -->
-            <div class="space-y-4">
-              <div class="flex items-center justify-between text-xs bg-slate-900/60 p-3 rounded-lg border border-slate-800/50">
-                <div class="flex items-center gap-2">
-                  <div class="w-2 h-2 rounded-full bg-blue-500"></div>
-                  <span class="font-medium text-slate-300">TRX-7809 (Stock In)</span>
-                </div>
-                <span class="text-slate-500">Just now</span>
-              </div>
-              <div class="flex items-center justify-between text-xs bg-slate-900/60 p-3 rounded-lg border border-slate-800/50">
-                <div class="flex items-center gap-2">
-                  <div class="w-2 h-2 rounded-full bg-emerald-500"></div>
-                  <span class="font-medium text-slate-300">TRX-7808 (Adjustment)</span>
-                </div>
-                <span class="text-slate-500">3 mins ago</span>
-              </div>
-              <div class="flex items-center justify-between text-xs bg-slate-900/60 p-3 rounded-lg border border-slate-800/50">
-                <div class="flex items-center gap-2">
-                  <div class="w-2 h-2 rounded-full bg-rose-500"></div>
-                  <span class="font-medium text-slate-300">TRX-7807 (Stock Out)</span>
-                </div>
-                <span class="text-slate-500">12 mins ago</span>
-              </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div 
+            v-for="f in features" :key="f.title"
+            class="p-6 rounded-2xl border border-slate-200 bg-white hover:border-slate-300 hover:shadow-md transition-all duration-150 space-y-4 text-left"
+          >
+            <div :class="[f.bg, 'w-11 h-11 rounded-xl flex items-center justify-center']">
+              <component :is="f.icon" :class="[f.color, 'w-5 h-5']" />
             </div>
-
-            <!-- Custom visual badge -->
-            <div class="flex items-center gap-4 bg-gradient-to-r from-blue-900/20 to-indigo-900/20 border border-blue-900/40 p-4 rounded-xl">
-              <div class="w-10 h-10 rounded-lg bg-blue-600/20 flex items-center justify-center text-blue-400">
-                <TrendingUp class="w-5 h-5" />
-              </div>
-              <div>
-                <p class="text-sm font-semibold text-white">Dynamic Analytics</p>
-                <p class="text-xs text-slate-400">Database queued report generation triggers automatic downloads.</p>
-              </div>
-            </div>
+            <h3 class="font-bold text-slate-900">{{ f.title }}</h3>
+            <p class="text-sm text-slate-500 leading-relaxed">{{ f.desc }}</p>
           </div>
         </div>
-      </div>
+      </section>
+
+      <!-- Final CTA Section -->
+      <section class="bg-blue-600 py-20 px-6 text-center text-white">
+        <div class="max-w-2xl mx-auto space-y-6">
+          <h2 class="text-3xl sm:text-4xl font-black">Ready to take control of your inventory?</h2>
+          <p class="text-blue-200 text-base">Sign in and start managing your stock, transactions, and team — all from one dashboard.</p>
+          <button
+            @click="navigateToApp"
+            class="inline-flex items-center gap-2.5 px-8 py-3.5 rounded-xl bg-white hover:bg-blue-50 text-blue-700 font-bold text-base transition-all duration-150 cursor-pointer hover:-translate-y-0.5 shadow-lg shadow-blue-800/20"
+          >
+            <span>{{ isLoggedIn ? 'Go to Dashboard' : 'Sign In Now' }}</span>
+            <ArrowRight class="w-5 h-5" />
+          </button>
+        </div>
+      </section>
     </main>
 
-    <!-- Features Section -->
-    <section id="features" class="border-t border-slate-800 bg-slate-950/30 py-20 px-6 md:px-8">
-      <div class="max-w-7xl mx-auto space-y-12">
-        <div class="text-center max-w-xl mx-auto space-y-3">
-          <h2 class="text-2xl sm:text-3xl font-bold text-white">Full-Featured Inventory Platform</h2>
-          <p class="text-slate-400 text-sm sm:text-base">Built to handle complex enterprise auditing and strict transactional operations.</p>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          <!-- Card 1 -->
-          <div class="bg-slate-900/50 border border-slate-800/60 p-6 rounded-2xl space-y-4 hover:border-slate-700 transition-colors">
-            <div class="w-12 h-12 rounded-xl bg-blue-600/10 border border-blue-600/20 flex items-center justify-center text-blue-400">
-              <ShieldCheck class="w-6 h-6" />
-            </div>
-            <h3 class="text-lg font-semibold text-white">Role-Based Access</h3>
-            <p class="text-sm text-slate-400 leading-relaxed">
-              Granular gatekeeping that restricts admin portals (user CRUD & logs) to specific authenticated administrators.
-            </p>
-          </div>
-
-          <!-- Card 2 -->
-          <div class="bg-slate-900/50 border border-slate-800/60 p-6 rounded-2xl space-y-4 hover:border-slate-700 transition-colors">
-            <div class="w-12 h-12 rounded-xl bg-emerald-600/10 border border-emerald-600/20 flex items-center justify-center text-emerald-400">
-              <Package class="w-6 h-6" />
-            </div>
-            <h3 class="text-lg font-semibold text-white">Catalog Tracking</h3>
-            <p class="text-sm text-slate-400 leading-relaxed">
-              Upload specification PDFs, manage dynamic JSON attributes, organize categories, and perform strict size validation.
-            </p>
-          </div>
-
-          <!-- Card 3 -->
-          <div class="bg-slate-900/50 border border-slate-800/60 p-6 rounded-2xl space-y-4 hover:border-slate-700 transition-colors">
-            <div class="w-12 h-12 rounded-xl bg-indigo-600/10 border border-indigo-600/20 flex items-center justify-center text-indigo-400">
-              <ArrowUpDown class="w-6 h-6" />
-            </div>
-            <h3 class="text-lg font-semibold text-white">Audit Trails</h3>
-            <p class="text-sm text-slate-400 leading-relaxed">
-              Every detail is logged. Data snapshots preserve records immutably, protecting history from subsequent parent modifications.
-            </p>
-          </div>
-
-          <!-- Card 4 -->
-          <div class="bg-slate-900/50 border border-slate-800/60 p-6 rounded-2xl space-y-4 hover:border-slate-700 transition-colors">
-            <div class="w-12 h-12 rounded-xl bg-purple-600/10 border border-purple-600/20 flex items-center justify-center text-purple-400">
-              <FileSpreadsheet class="w-6 h-6" />
-            </div>
-            <h3 class="text-lg font-semibold text-white">Queued Excel Ops</h3>
-            <p class="text-sm text-slate-400 leading-relaxed">
-              Export and import hundreds of records with dynamic column selection via a background database queue worker.
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
-
     <!-- Footer -->
-    <footer class="h-16 border-t border-slate-850 px-6 md:px-8 flex items-center justify-between text-xs text-slate-500 max-w-7xl w-full mx-auto shrink-0">
-      <p>&copy; 2026 Inventory System. All rights reserved.</p>
-      <div class="flex gap-4">
-        <span class="hover:text-slate-400 cursor-pointer">Privacy Policy</span>
-        <span class="hover:text-slate-400 cursor-pointer">Terms of Service</span>
+    <footer class="border-t border-slate-100 bg-white px-6 py-8">
+      <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-slate-400">
+        <BrandLogo size="sm" />
+        <p>&copy; 2026 Inventory System. All rights reserved.</p>
+        <div class="flex gap-6">
+          <span class="hover:text-slate-600 cursor-pointer transition-colors">Privacy Policy</span>
+          <span class="hover:text-slate-600 cursor-pointer transition-colors">Terms of Service</span>
+        </div>
       </div>
     </footer>
   </div>

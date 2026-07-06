@@ -1,6 +1,5 @@
-<script setup>
+﻿<script setup>
 import { ref, onMounted, watch } from 'vue'
-import DashboardLayout from '../../components/DashboardLayout.vue'
 import { useCategoriesStore } from '../../store/categories'
 import { useToast } from '../../composables/useToast'
 import CategoryFormModal from './CategoryFormModal.vue'
@@ -101,7 +100,7 @@ const confirmDelete = async () => {
 </script>
 
 <template>
-  <DashboardLayout>
+  <div>
     <div class="space-y-6">
       
       <!-- Top Action Bar -->
@@ -260,5 +259,6 @@ const confirmDelete = async () => {
       @close="isDeleteOpen = false"
       @confirm="confirmDelete"
     />
-  </DashboardLayout>
+  </div>
 </template>
+

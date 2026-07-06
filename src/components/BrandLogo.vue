@@ -14,6 +14,11 @@ const props = defineProps({
   showText: {
     type: Boolean,
     default: true
+  },
+  // Use white text (for dark backgrounds like login panel, navbar dark)
+  white: {
+    type: Boolean,
+    default: false
   }
 })
 
@@ -26,13 +31,15 @@ const boxClass = computed(() => {
 const textClass = computed(() => {
   let classes = 'tracking-wider '
   if (props.size === 'sm') {
-    classes += 'font-semibold text-lg text-white'
+    classes += props.white ? 'font-semibold text-lg text-white' : 'font-semibold text-lg text-slate-900'
   } else {
     classes += 'font-bold text-xl '
     if (props.gradientText) {
       classes += 'bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent'
-    } else {
+    } else if (props.white) {
       classes += 'text-white'
+    } else {
+      classes += 'text-slate-900'
     }
   }
   return classes

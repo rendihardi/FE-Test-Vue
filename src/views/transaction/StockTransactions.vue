@@ -1,7 +1,6 @@
-<script setup>
+﻿<script setup>
 import { ref, onMounted, watch, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import DashboardLayout from '../../components/DashboardLayout.vue'
 import { useTransactionsStore } from '../../store/transactions'
 import { useProductsStore } from '../../store/products'
 import { useToast } from '../../composables/useToast'
@@ -290,7 +289,7 @@ const switchTab = (tabName) => {
 </script>
 
 <template>
-  <DashboardLayout>
+  <div>
     <div class="space-y-6">
       
       <!-- Top Title Bar -->
@@ -654,5 +653,6 @@ const switchTab = (tabName) => {
       :filters="transactionFilters"
       @close="isExportModalOpen = false"
     />
-  </DashboardLayout>
+  </div>
 </template>
+

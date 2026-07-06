@@ -1,7 +1,6 @@
-<script setup>
+﻿<script setup>
 import { ref, onMounted, watch, computed } from 'vue'
 import { useRoute } from 'vue-router'
-import DashboardLayout from '../../components/DashboardLayout.vue'
 import { useAuditsStore } from '../../store/audits'
 import { useToast } from '../../composables/useToast'
 import { formatDateTime } from '../../utils/helpers'
@@ -98,7 +97,7 @@ const getChangedKeys = (audit) => {
 </script>
 
 <template>
-  <DashboardLayout>
+  <div>
     <div class="space-y-6">
       
       <!-- Top Title Bar -->
@@ -309,5 +308,6 @@ const getChangedKeys = (audit) => {
       </div>
 
     </div>
-  </DashboardLayout>
+  </div>
 </template>
+

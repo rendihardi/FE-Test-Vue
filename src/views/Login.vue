@@ -26,7 +26,6 @@ onMounted(() => {
 const handleLogin = async () => {
   errors.value = {}
   
-  // Basic validation
   if (!email.value) {
     errors.value.email = 'Email is required'
   }
@@ -50,7 +49,6 @@ const handleLogin = async () => {
       authStore.setUser(user, token)
       addToast('Welcome back! Login successful.', 'success')
       
-      // Redirect
       const redirectTo = route.query.redirect || '/dashboard'
       router.push(redirectTo)
     } else {
@@ -73,121 +71,156 @@ const handleLogin = async () => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-slate-950 flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative overflow-hidden">
-    <!-- Background glow elements -->
-    <div class="absolute -top-40 -left-40 w-96 h-96 bg-blue-600/10 rounded-full blur-3xl -z-10"></div>
-    <div class="absolute -bottom-40 -right-40 w-96 h-96 bg-indigo-600/10 rounded-full blur-3xl -z-10"></div>
+  <div class="min-h-screen bg-slate-50 flex" style="font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;">
 
-    <div class="sm:mx-auto sm:w-full sm:max-w-md relative px-6 sm:px-0">
-      <!-- Back button -->
-      <router-link 
-        to="/" 
-        class="inline-flex items-center gap-2 text-xs text-slate-400 hover:text-white transition-colors mb-6 cursor-pointer"
-      >
-        <ArrowLeft class="w-3.5 h-3.5" />
-        <span>Return to Landing Page</span>
-      </router-link>
+    <!-- Left: Branding Panel -->
+    <div class="hidden lg:flex lg:w-1/2 bg-blue-600 flex-col justify-between p-12 relative overflow-hidden">
+      <!-- Decorative circles -->
+      <div class="absolute -top-24 -right-24 w-72 h-72 bg-white/5 rounded-full"></div>
+      <div class="absolute bottom-0 -left-12 w-56 h-56 bg-white/5 rounded-full"></div>
+      <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-white/5 rounded-full"></div>
 
-      <BrandLogo size="md" class="justify-center mb-6" />
-      
-      <h2 class="text-center text-2xl sm:text-3xl font-extrabold tracking-tight text-white">
-        Sign in to your account
-      </h2>
-      <p class="mt-2 text-center text-sm text-slate-400">
-        Enter credentials to access your inventory desk
-      </p>
+      <!-- Top brand -->
+      <div class="relative z-10">
+        <BrandLogo size="md" :white="true" />
+      </div>
+
+      <!-- Centered content -->
+      <div class="relative z-10 space-y-6">
+        <h1 class="text-4xl font-black text-white leading-snug">
+          Your complete<br />inventory command<br />center.
+        </h1>
+        <p class="text-blue-100 text-base leading-relaxed max-w-sm">
+          Track stock, manage products, run bulk Excel operations, and keep a full audit trail — all from one dashboard.
+        </p>
+
+        <!-- Feature list -->
+        <div class="space-y-3 pt-2">
+          <div v-for="item in [
+            'Real-time stock tracking',
+            'Full audit log with diff viewer',
+            'Background Excel import/export',
+            'Role-based access control'
+          ]" :key="item" class="flex items-center gap-3 text-sm text-blue-100">
+            <div class="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center shrink-0">
+              <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
+              </svg>
+            </div>
+            <span>{{ item }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom note -->
+      <p class="relative z-10 text-xs text-blue-200">&copy; 2026 Inventory System. All rights reserved.</p>
     </div>
 
-    <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md px-4 sm:px-0">
-      <div class="bg-slate-900/60 border border-slate-800/80 backdrop-blur-md py-8 px-6 sm:px-10 rounded-2xl shadow-xl space-y-6">
-        <form class="space-y-5" @submit.prevent="handleLogin">
-          
-          <!-- Email Input -->
-          <div>
-            <label for="email" class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
-              Email Address
-            </label>
-            <div class="relative rounded-lg shadow-xs">
-              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-500">
-                <Mail class="w-4 h-4" />
+    <!-- Right: Login Form Panel -->
+    <div class="flex-1 flex flex-col items-center justify-center p-6 sm:p-12">
+
+      <!-- Back link (mobile only or always visible) -->
+      <div class="w-full max-w-sm mb-8 lg:mb-6">
+        <router-link 
+          to="/" 
+          class="inline-flex items-center gap-1.5 text-xs text-slate-400 hover:text-slate-700 transition-colors font-medium"
+        >
+          <ArrowLeft class="w-3.5 h-3.5" />
+          <span>Back to Home</span>
+        </router-link>
+      </div>
+
+      <div class="w-full max-w-sm space-y-8">
+        <!-- Mobile brand (only shown on small screens) -->
+        <div class="lg:hidden text-center">
+          <BrandLogo size="md" class="justify-center mb-2" />
+        </div>
+
+        <!-- Heading -->
+        <div class="space-y-1">
+          <h2 class="text-2xl font-black text-slate-900">Sign in to your account</h2>
+          <p class="text-sm text-slate-500">Enter your credentials to access the dashboard.</p>
+        </div>
+
+        <!-- Form Card -->
+        <div class="bg-white border border-slate-200 rounded-2xl shadow-sm p-8">
+          <form class="space-y-5" @submit.prevent="handleLogin">
+
+            <!-- Email Input -->
+            <div>
+              <label for="email" class="block text-xs font-semibold text-slate-600 mb-1.5 uppercase tracking-wide">
+                Email Address
+              </label>
+              <div class="relative">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+                  <Mail class="w-4 h-4" />
+                </div>
+                <input
+                  id="email"
+                  v-model="email"
+                  type="email"
+                  autocomplete="email"
+                  required
+                  placeholder="you@example.com"
+                  :class="[
+                    'block w-full pl-10 pr-3 py-2.5 border rounded-xl text-slate-800 placeholder-slate-400 text-sm focus:outline-none transition-all bg-white',
+                    errors.email 
+                      ? 'border-red-400 focus:ring-2 focus:ring-red-100 focus:border-red-400' 
+                      : 'border-slate-200 focus:ring-2 focus:ring-blue-100 focus:border-blue-400'
+                  ]"
+                />
               </div>
-              <input
-                id="email"
-                v-model="email"
-                type="email"
-                autocomplete="email"
-                required
-                placeholder="you@example.com"
-                :class="[
-                  'block w-full pl-10 pr-3 py-3 bg-slate-950 border rounded-xl text-slate-200 placeholder-slate-500 text-sm focus:outline-none transition-all',
-                  errors.email ? 'border-rose-500 focus:ring-1 focus:ring-rose-500 focus:border-rose-500' : 'border-slate-800 focus:ring-1 focus:ring-blue-500 focus:border-blue-500'
-                ]"
-              />
+              <p v-if="errors.email" class="mt-1.5 text-xs text-red-500 font-medium">{{ errors.email }}</p>
             </div>
-            <p v-if="errors.email" class="mt-1.5 text-xs text-rose-500">{{ errors.email }}</p>
-          </div>
 
-          <!-- Password Input -->
-          <div>
-            <label for="password" class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
-              Password
-            </label>
-            <div class="relative rounded-lg shadow-xs">
-              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-500">
-                <Lock class="w-4 h-4" />
+            <!-- Password Input -->
+            <div>
+              <label for="password" class="block text-xs font-semibold text-slate-600 mb-1.5 uppercase tracking-wide">
+                Password
+              </label>
+              <div class="relative">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+                  <Lock class="w-4 h-4" />
+                </div>
+                <input
+                  id="password"
+                  v-model="password"
+                  type="password"
+                  autocomplete="current-password"
+                  required
+                  placeholder="••••••••"
+                  :class="[
+                    'block w-full pl-10 pr-3 py-2.5 border rounded-xl text-slate-800 placeholder-slate-400 text-sm focus:outline-none transition-all bg-white',
+                    errors.password 
+                      ? 'border-red-400 focus:ring-2 focus:ring-red-100 focus:border-red-400' 
+                      : 'border-slate-200 focus:ring-2 focus:ring-blue-100 focus:border-blue-400'
+                  ]"
+                />
               </div>
-              <input
-                id="password"
-                v-model="password"
-                type="password"
-                autocomplete="current-password"
-                required
-                placeholder="••••••••"
-                :class="[
-                  'block w-full pl-10 pr-3 py-3 bg-slate-950 border rounded-xl text-slate-200 placeholder-slate-500 text-sm focus:outline-none transition-all',
-                  errors.password ? 'border-rose-500 focus:ring-1 focus:ring-rose-500 focus:border-rose-500' : 'border-slate-800 focus:ring-1 focus:ring-blue-500 focus:border-blue-500'
-                ]"
-              />
+              <p v-if="errors.password" class="mt-1.5 text-xs text-red-500 font-medium">{{ errors.password }}</p>
             </div>
-            <p v-if="errors.password" class="mt-1.5 text-xs text-rose-500">{{ errors.password }}</p>
-          </div>
 
-          <!-- General error alert -->
-          <div v-if="errors.general" class="p-3 bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs rounded-lg text-center font-medium">
-            {{ errors.general }}
-          </div>
+            <!-- General error -->
+            <div v-if="errors.general" class="p-3 bg-red-50 border border-red-200 text-red-600 text-xs rounded-xl text-center font-medium">
+              {{ errors.general }}
+            </div>
 
-          <!-- Submit Button -->
-          <div>
+            <!-- Submit Button -->
             <button
               type="submit"
               :disabled="isLoading"
-              class="w-full flex justify-center py-3 px-4 border border-transparent rounded-xl shadow-md text-sm font-semibold text-white bg-blue-600 hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-150 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+              class="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold shadow-md shadow-blue-200 transition-all duration-150 disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
             >
-              <Loader2 v-if="isLoading" class="w-4 h-4 animate-spin mr-2" />
-              <span>{{ isLoading ? 'Authenticating...' : 'Sign In' }}</span>
+              <Loader2 v-if="isLoading" class="w-4 h-4 animate-spin" />
+              <span>{{ isLoading ? 'Signing in...' : 'Sign In' }}</span>
             </button>
-          </div>
-        </form>
+          </form>
+        </div>
 
-        <!-- Demo accounts cheat sheet -->
-        <!-- <div class="pt-4 border-t border-slate-800/80">
-          <p class="text-xs font-semibold text-slate-400 mb-2.5">Demo Account Credentials:</p>
-          <div class="space-y-2 text-[11px] text-slate-500 font-mono">
-            <div class="flex justify-between bg-slate-950/40 p-2 rounded border border-slate-850">
-              <div>
-                <span class="text-slate-400 font-semibold">Admin:</span> admin@gmail.com
-              </div>
-              <span class="text-slate-400">konfirmasi</span>
-            </div>
-            <div class="flex justify-between bg-slate-950/40 p-2 rounded border border-slate-850">
-              <div>
-                <span class="text-slate-400 font-semibold">Staff:</span> staf@gmail.com
-              </div>
-              <span class="text-slate-400">konfirmasi</span>
-            </div>
-          </div>
-        </div> -->
+        <!-- Footer note -->
+        <p class="text-center text-xs text-slate-400">
+          Having trouble? Contact your system administrator.
+        </p>
       </div>
     </div>
   </div>

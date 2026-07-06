@@ -1,6 +1,5 @@
 <script setup>
 import { ref, onMounted } from 'vue'
-import DashboardLayout from '../components/DashboardLayout.vue'
 import api from '../utils/api'
 import { useToast } from '../composables/useToast'
 import { formatDateTime, formatPrice } from '../utils/helpers'
@@ -128,10 +127,9 @@ onMounted(() => {
 </script>
 
 <template>
-  <DashboardLayout>
-    <div class="space-y-8">
-      
-      <!-- Top Title Bar -->
+  <div class="space-y-8">
+    
+    <!-- Top Title Bar -->
       <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h2 class="text-2xl font-bold text-slate-900 tracking-tight">System Statistics</h2>
@@ -494,8 +492,9 @@ onMounted(() => {
           </div>
         </div>
 
-      </div>
-
     </div>
-  </DashboardLayout>
+
+</div>
 </template>
+
+

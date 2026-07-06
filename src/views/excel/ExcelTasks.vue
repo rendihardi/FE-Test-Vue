@@ -1,6 +1,5 @@
-<script setup>
+﻿<script setup>
 import { ref, onMounted, onBeforeUnmount, watch } from 'vue'
-import DashboardLayout from '../../components/DashboardLayout.vue'
 import { useExcelStore } from '../../store/excel'
 import { formatDateTime } from '../../utils/helpers'
 
@@ -77,7 +76,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <DashboardLayout>
+  <div>
     <div class="space-y-8">
       
       <!-- Top Title Bar -->
@@ -213,5 +212,6 @@ onBeforeUnmount(() => {
       </div>
 
     </div>
-  </DashboardLayout>
+  </div>
 </template>
+

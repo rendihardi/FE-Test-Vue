@@ -1,6 +1,5 @@
-<script setup>
+﻿<script setup>
 import { ref, onMounted, watch, computed } from 'vue'
-import DashboardLayout from '../../components/DashboardLayout.vue'
 import { useProductsStore } from '../../store/products'
 import { useCategoriesStore } from '../../store/categories'
 import { useToast } from '../../composables/useToast'
@@ -167,7 +166,7 @@ const confirmDelete = async () => {
 </script>
 
 <template>
-  <DashboardLayout>
+  <div>
     <div class="space-y-6">
       
       <!-- Top Action Bar -->
@@ -535,5 +534,6 @@ const confirmDelete = async () => {
       :filters="productFilters"
       @close="isExportModalOpen = false"
     />
-  </DashboardLayout>
+  </div>
 </template>
+
