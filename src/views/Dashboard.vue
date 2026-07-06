@@ -36,6 +36,20 @@ const lowStockData = ref([])
 const stockChartData = ref([])
 const recentTransactionsData = ref([])
 
+// Color palette for chart slices
+const colors = [
+  { hex: '#3b82f6', bg: 'bg-blue-500' },
+  { hex: '#10b981', bg: 'bg-emerald-500' },
+  { hex: '#f59e0b', bg: 'bg-amber-500' },
+  { hex: '#8b5cf6', bg: 'bg-purple-500' },
+  { hex: '#ec4899', bg: 'bg-pink-500' },
+  { hex: '#f97316', bg: 'bg-orange-500' },
+  { hex: '#06b6d4', bg: 'bg-cyan-500' },
+  { hex: '#14b8a6', bg: 'bg-teal-500' }
+]
+
+const hoveredCategory = ref(null)
+
 // Fetch Functions
 const fetchCards = async () => {
   isCardsLoading.value = true
@@ -242,11 +256,11 @@ onMounted(() => {
                   <g>
                     <!-- Stock In (Blue Bar) -->
                     <rect 
-                      :x="60 + idx * 60" 
+                      :x="52 + idx * 60" 
                       :y="220 - Math.min(190, (d.stock_in * 1.5))" 
-                      width="16" 
+                      width="12" 
                       :height="Math.min(190, (d.stock_in * 1.5))" 
-                      rx="3" 
+                      rx="2.5" 
                       fill="#2563eb"
                       class="transition-all hover:fill-blue-700 cursor-pointer"
                     >
@@ -254,15 +268,27 @@ onMounted(() => {
                     </rect>
                     <!-- Stock Out (Red Bar) -->
                     <rect 
-                      :x="78 + idx * 60" 
+                      :x="66 + idx * 60" 
                       :y="220 - Math.min(190, (d.stock_out * 1.5))" 
-                      width="16" 
+                      width="12" 
                       :height="Math.min(190, (d.stock_out * 1.5))" 
-                      rx="3" 
+                      rx="2.5" 
                       fill="#f43f5e"
                       class="transition-all hover:fill-rose-700 cursor-pointer"
                     >
                       <title>{{ d.label }}: Stock Out {{ d.stock_out }} qty</title>
+                    </rect>
+                    <!-- Adjustment (Amber Bar) -->
+                    <rect 
+                      :x="80 + idx * 60" 
+                      :y="220 - Math.min(190, (d.adj * 1.5))" 
+                      width="12" 
+                      :height="Math.min(190, (d.adj * 1.5))" 
+                      rx="2.5" 
+                      fill="#f59e0b"
+                      class="transition-all hover:fill-amber-700 cursor-pointer"
+                    >
+                      <title>{{ d.label }}: Adjustment {{ d.adj }} qty</title>
                     </rect>
                   </g>
                 </g>
@@ -277,7 +303,7 @@ onMounted(() => {
             </div>
 
             <!-- Chart Legend -->
-            <div class="flex items-center gap-6 justify-center mt-4 pt-4 border-t border-slate-100 text-xs font-semibold text-slate-500">
+            <div class="flex flex-wrap items-center gap-6 justify-center mt-4 pt-4 border-t border-slate-100 text-xs font-semibold text-slate-500">
               <div class="flex items-center gap-2">
                 <span class="w-3.5 h-3.5 rounded bg-blue-600 shrink-0"></span>
                 <span>Stock In (Items Received)</span>
@@ -286,6 +312,10 @@ onMounted(() => {
                 <span class="w-3.5 h-3.5 rounded bg-rose-500 shrink-0"></span>
                 <span>Stock Out (Items Dispatched)</span>
               </div>
+              <div class="flex items-center gap-2">
+                <span class="w-3.5 h-3.5 rounded bg-amber-500 shrink-0"></span>
+                <span>Adjustment</span>
+              </div>
             </div>
           </div>
         </div>
@@ -293,7 +323,7 @@ onMounted(() => {
         <!-- Right Column: Pie Chart (Category Distribution) -->
         <div class="lg:col-span-4 bg-white border border-slate-200 rounded-2xl p-6 shadow-sm flex flex-col justify-between">
           <div class="pb-4 border-b border-slate-100">
-            <h4 class="font-bold text-slate-800">Catalog Distribution</h4>
+            <h4 class="font-bold text-slate-800">Category Distribution</h4>
             <p class="text-xs text-slate-400">Percentage of product items per category</p>
           </div>
 
@@ -324,23 +354,42 @@ onMounted(() => {
                 />
                 
                 <!-- Display slices representation -->
-                <!-- Simple loop generating partial slices -->
                 <circle 
-                  v-for="(cat, index) in pieChartData.slice(0, 4)" 
+                  v-for="(cat, index) in pieChartData" 
                   :key="cat.category_id"
                   cx="50" cy="50" r="40" 
                   fill="transparent" 
-                  :stroke="['#3b82f6', '#10b981', '#f59e0b', '#8b5cf6'][index % 4]" 
-                  stroke-width="12" 
-                  :stroke-dasharray="`${(cat.product_count / (cardsData.total_products || 1)) * 251.2} 251.2`"
-                  :stroke-dashoffset="index === 0 ? 0 : -((pieChartData.slice(0, index).reduce((acc, c) => acc + c.product_count, 0) / (cardsData.total_products || 1)) * 251.2)"
-                  class="transition-all duration-300"
+                  :stroke="colors[index % colors.length].hex" 
+                  :stroke-width="hoveredCategory?.category_id === cat.category_id ? 15 : 12" 
+                  :stroke-dasharray="`${(Number(cat.percentage) / 100) * 251.2} 251.2`"
+                  :stroke-dashoffset="index === 0 ? 0 : -((pieChartData.slice(0, index).reduce((acc, c) => acc + Number(c.percentage), 0) / 100) * 251.2)"
+                  class="transition-all duration-300 cursor-pointer origin-center hover:scale-[1.03]"
+                  :opacity="hoveredCategory && hoveredCategory.category_id !== cat.category_id ? 0.5 : 1"
+                  @mouseenter="hoveredCategory = cat"
+                  @mouseleave="hoveredCategory = null"
                 />
               </svg>
               <!-- Middle content -->
-              <div class="absolute inset-0 flex flex-col items-center justify-center bg-white rounded-full m-5 shadow-xs">
-                <span class="text-xs text-slate-400 font-medium">Catalog</span>
-                <span class="text-lg font-black text-slate-800">{{ cardsData.total_products }}</span>
+              <div class="absolute inset-0 flex flex-col items-center justify-center bg-white rounded-full m-5 shadow-xs transition-all duration-300">
+                <template v-if="hoveredCategory">
+                  <span 
+                    class="text-[10px] font-bold uppercase tracking-wider text-center px-2 truncate max-w-[110px]"
+                    :style="{ color: colors[pieChartData.indexOf(hoveredCategory) % colors.length].hex }"
+                  >
+                    {{ hoveredCategory.category_name }}
+                  </span>
+                  <span class="text-xl font-black text-slate-800 my-0.5">
+                    {{ Number(hoveredCategory.percentage).toFixed(1) }}%
+                  </span>
+                  <span class="text-[10px] text-slate-400 font-medium">
+                    {{ hoveredCategory.product_count }} items
+                  </span>
+                </template>
+                <template v-else>
+                  <span class="text-xs text-slate-400 font-medium">Category</span>
+                  <span class="text-lg font-black text-slate-800">{{ cardsData.total_categories }}</span>
+                  <span class="text-[10px] text-slate-400 font-medium">Total Products</span>
+                </template>
               </div>
             </div>
 
@@ -349,13 +398,22 @@ onMounted(() => {
               <div 
                 v-for="(cat, index) in pieChartData" 
                 :key="cat.category_id"
-                class="flex items-center justify-between text-xs font-semibold text-slate-600"
+                class="flex items-center justify-between text-xs font-semibold text-slate-600 p-1.5 rounded-lg transition-colors cursor-pointer hover:bg-slate-50"
+                :class="{ 'bg-slate-50': hoveredCategory?.category_id === cat.category_id }"
+                @mouseenter="hoveredCategory = cat"
+                @mouseleave="hoveredCategory = null"
               >
                 <div class="flex items-center gap-2 truncate">
-                  <span :class="['w-2.5 h-2.5 rounded-full shrink-0', ['bg-blue-500', 'bg-emerald-500', 'bg-amber-500', 'bg-purple-500'][index % 4] || 'bg-slate-300']"></span>
-                  <span class="truncate">{{ cat.category_name }}</span>
+                  <span :class="['w-2.5 h-2.5 rounded-full shrink-0', colors[index % colors.length].bg]"></span>
+                  <span class="truncate" :class="{ 'text-slate-900 font-bold': hoveredCategory?.category_id === cat.category_id }">
+                    {{ cat.category_name }}
+                  </span>
                 </div>
-                <span class="text-slate-400 font-mono">{{ cat.product_count }} items</span>
+                <div class="flex items-center gap-1.5 font-mono text-slate-400 shrink-0">
+                  <span>{{ cat.product_count }} Products</span>
+                  <span class="text-[10px] font-bold text-slate-300">|</span>
+                  <span class="text-slate-500 font-bold">{{ Number(cat.percentage).toFixed(1) }}%</span>
+                </div>
               </div>
             </div>
           </div>
@@ -422,7 +480,7 @@ onMounted(() => {
               to="/products"
               class="w-full text-center block text-xs font-semibold text-blue-600 hover:text-blue-500 transition-colors"
             >
-              View All Catalog Products
+              View All Category Products
             </router-link>
           </div>
         </div>

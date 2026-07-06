@@ -192,14 +192,15 @@ const handleSubmit = async () => {
         </button>
       </div>
 
-      <form @submit.prevent="handleSubmit" class="space-y-4 text-left">
+      <form @submit.prevent="handleSubmit" class="space-y-4 text-left" autocomplete="off">
         <!-- Name -->
         <FormInput 
           id="prod-name"
           label="Product Name"
           v-model="form.product_name"
           required
-          placeholder="Dell XPS 13"
+          placeholder="Dell XPS 13" 
+          autocomplete="off"
           :error="errors.product_name ? errors.product_name[0] : ''"
         />
 
@@ -228,6 +229,7 @@ const handleSubmit = async () => {
             v-model="form.price"
             required
             placeholder="e.g. 15000000"
+            autocomplete="off"
             :error="errors.price ? errors.price[0] : ''"
           />
         </div>
@@ -240,6 +242,7 @@ const handleSubmit = async () => {
           type="number"
           v-model="form.current_stock"
           placeholder="0"
+          autocomplete="off"
           :error="errors.current_stock ? errors.current_stock[0] : ''"
         />
 
@@ -300,6 +303,7 @@ const handleSubmit = async () => {
                 type="text"
                 placeholder="Key (e.g. Brand)"
                 required
+                autocomplete="off"
                 class="flex-1 px-3 py-1.5 border border-slate-200 rounded-lg text-xs text-slate-800 focus:outline-none focus:border-blue-500"
               />
               <input
@@ -307,6 +311,7 @@ const handleSubmit = async () => {
                 type="text"
                 placeholder="Value (e.g. Dell)"
                 required
+                autocomplete="off"
                 class="flex-1 px-3 py-1.5 border border-slate-200 rounded-lg text-xs text-slate-800 focus:outline-none focus:border-blue-500"
               />
               <button 

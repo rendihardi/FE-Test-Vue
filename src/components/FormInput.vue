@@ -39,6 +39,10 @@ defineProps({
   disabled: {
     type: Boolean,
     default: false
+  },
+  autocomplete: {
+    type: String,
+    default: undefined
   }
 })
 
@@ -59,6 +63,7 @@ defineEmits(['update:modelValue'])
       :rows="rows"
       :placeholder="placeholder"
       :disabled="disabled"
+      :autocomplete="autocomplete"
       :class="[
         'block w-full px-3 py-2 border rounded-xl text-slate-800 text-xs focus:outline-none transition-all resize-none',
         error 
@@ -76,6 +81,7 @@ defineEmits(['update:modelValue'])
       :placeholder="placeholder"
       :required="required"
       :disabled="disabled"
+      :autocomplete="autocomplete"
       :class="[
         'block w-full px-3 py-2 border rounded-xl text-slate-800 text-xs focus:outline-none transition-all',
         error 

@@ -1,9 +1,13 @@
-﻿<script setup>
+<script setup>
 import { ref, onMounted, watch, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { useAuditsStore } from '../../store/audits'
 import { useToast } from '../../composables/useToast'
 import { formatDateTime } from '../../utils/helpers'
+import { useProductsStore } from '../../store/products'
+import { useCategoriesStore } from '../../store/categories'
+import { useUsersStore } from '../../store/users'
+import { useRolesStore } from '../../store/roles'
 
 import Pagination from '../../components/Pagination.vue'
 import LoadingState from '../../components/LoadingState.vue'
@@ -18,6 +22,10 @@ import {
 const route = useRoute()
 const { addToast } = useToast()
 const auditsStore = useAuditsStore()
+const productsStore = useProductsStore()
+const categoriesStore = useCategoriesStore()
+const usersStore = useUsersStore()
+const rolesStore = useRolesStore()
 
 // Read active audit class category
 const auditType = computed(() => route.query.type || 'product')
@@ -25,11 +33,35 @@ const auditType = computed(() => route.query.type || 'product')
 // Query & Filter params
 const search = ref('')
 const selectedEvent = ref('')
+const selectedTargetId = ref('')
 const rowPerPage = ref(10)
 const currentPage = ref(1)
 
+// Filter lists
+const productsList = ref([])
+const categoriesList = ref([])
+const usersList = ref([])
+const rolesList = ref([])
+
 // Expanded rows mapping for side-by-side JSON comparison
 const expandedRows = ref({})
+
+const fetchFilterOptions = async () => {
+  try {
+    const [prodRes, catRes, userRes, roleRes] = await Promise.all([
+      productsStore.fetchAll().catch(() => ({ data: [] })),
+      categoriesStore.fetchAll().catch(() => ({ data: [] })),
+      usersStore.fetchAll().catch(() => ({ data: [] })),
+      rolesStore.fetchAll().catch(() => ({ data: [] }))
+    ])
+    productsList.value = prodRes.data || []
+    categoriesList.value = catRes.data || []
+    usersList.value = userRes.data || []
+    rolesList.value = roleRes.data || []
+  } catch (err) {
+    console.error('Failed fetching audit filters lists:', err)
+  }
+}
 
 const loadAudits = async () => {
   expandedRows.value = {} // reset collapse
@@ -37,6 +69,7 @@ const loadAudits = async () => {
     await auditsStore.fetchAudits(auditType.value, {
       search: search.value,
       event: selectedEvent.value || undefined,
+      auditable_id: selectedTargetId.value || undefined,
       row_per_page: rowPerPage.value,
       page: currentPage.value
     })
@@ -50,10 +83,11 @@ watch(auditType, () => {
   currentPage.value = 1
   search.value = ''
   selectedEvent.value = ''
+  selectedTargetId.value = ''
   loadAudits()
 })
 
-watch([rowPerPage, currentPage, selectedEvent], () => {
+watch([rowPerPage, currentPage, selectedEvent, selectedTargetId], () => {
   loadAudits()
 })
 
@@ -67,6 +101,7 @@ watch(search, () => {
 })
 
 onMounted(() => {
+  fetchFilterOptions()
   loadAudits()
 })
 
@@ -93,6 +128,18 @@ const getChangedKeys = (audit) => {
   const newVal = parseValues(audit.new_values)
   const keys = new Set([...Object.keys(oldVal), ...Object.keys(newVal)])
   return Array.from(keys).filter(k => k !== 'updated_at')
+}
+
+const getTargetName = (audit) => {
+  if (audit.auditable) {
+    return audit.auditable.name || audit.auditable.product_name || audit.auditable.category_name || audit.target_name
+  }
+  const oldVal = parseValues(audit.old_values)
+  const newVal = parseValues(audit.new_values)
+  const name = newVal.name || newVal.product_name || newVal.category_name || 
+               oldVal.name || oldVal.product_name || oldVal.category_name ||
+               audit.target_name
+  return name || `ID: ${audit.auditable_id}`
 }
 </script>
 
@@ -141,6 +188,59 @@ const getChangedKeys = (audit) => {
               </select>
             </div>
 
+            <!-- Target Resource dynamic filter -->
+            <div class="flex items-center gap-1.5">
+              <span class="capitalize">{{ auditType === 'role' ? 'Role' : auditType === 'user' ? 'User' : auditType === 'category' ? 'Category' : 'Product' }}:</span>
+              
+              <!-- Product select -->
+              <select 
+                v-if="auditType === 'product'"
+                v-model="selectedTargetId"
+                class="bg-white border border-slate-200 rounded-lg py-1 px-2.5 focus:outline-none focus:border-blue-500 cursor-pointer max-w-[150px]"
+              >
+                <option value="">All Products</option>
+                <option v-for="p in productsList" :key="p.id" :value="p.id">
+                  {{ p.product_name }}
+                </option>
+              </select>
+
+              <!-- Category select -->
+              <select 
+                v-else-if="auditType === 'category'"
+                v-model="selectedTargetId"
+                class="bg-white border border-slate-200 rounded-lg py-1 px-2.5 focus:outline-none focus:border-blue-500 cursor-pointer max-w-[150px]"
+              >
+                <option value="">All Categories</option>
+                <option v-for="c in categoriesList" :key="c.id" :value="c.id">
+                  {{ c.name }}
+                </option>
+              </select>
+
+              <!-- User select -->
+              <select 
+                v-else-if="auditType === 'user'"
+                v-model="selectedTargetId"
+                class="bg-white border border-slate-200 rounded-lg py-1 px-2.5 focus:outline-none focus:border-blue-500 cursor-pointer max-w-[150px]"
+              >
+                <option value="">All Users</option>
+                <option v-for="u in usersList" :key="u.id" :value="u.uuid || u.id">
+                  {{ u.name }}
+                </option>
+              </select>
+
+              <!-- Role select -->
+              <select 
+                v-else-if="auditType === 'role'"
+                v-model="selectedTargetId"
+                class="bg-white border border-slate-200 rounded-lg py-1 px-2.5 focus:outline-none focus:border-blue-500 cursor-pointer max-w-[150px]"
+              >
+                <option value="">All Roles</option>
+                <option v-for="r in rolesList" :key="r.id" :value="r.id">
+                  {{ r.name }}
+                </option>
+              </select>
+            </div>
+
             <!-- Page count -->
             <div class="flex items-center gap-2">
               <span>Show</span>
@@ -178,7 +278,7 @@ const getChangedKeys = (audit) => {
                 <th class="px-6 py-3.5 tracking-wider w-8"></th>
                 <th class="px-6 py-3.5 tracking-wider">User Operator</th>
                 <th class="px-6 py-3.5 tracking-wider">Event Trigger</th>
-                <th class="px-6 py-3.5 tracking-wider">Target ID</th>
+                <th class="px-6 py-3.5 tracking-wider">Target Resource</th>
                 <th class="px-6 py-3.5 tracking-wider">IP Address</th>
                 <th class="px-6 py-3.5 tracking-wider">Date & Time</th>
                 <th class="px-6 py-3.5 tracking-wider text-right">Details</th>
@@ -223,9 +323,11 @@ const getChangedKeys = (audit) => {
                     </span>
                   </td>
 
-                  <!-- Target ID -->
-                  <td class="px-6 py-4 font-mono text-slate-500 text-[10px] max-w-[100px] truncate" :title="audit.auditable_id">
-                    {{ audit.auditable_id }}
+                  <!-- Target Resource -->
+                  <td class="px-6 py-4">
+                    <p class="font-bold text-slate-800 truncate max-w-[180px]" :title="getTargetName(audit)">
+                      {{ getTargetName(audit) }}
+                    </p>
                   </td>
 
                   <!-- IP Address -->

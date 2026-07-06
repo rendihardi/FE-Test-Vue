@@ -1,5 +1,6 @@
 <script setup>
 import { computed } from 'vue'
+import { Boxes } from '@lucide/vue'
 
 const props = defineProps({
   size: {
@@ -28,6 +29,10 @@ const boxClass = computed(() => {
     : 'w-9 h-9 rounded-xl text-base bg-blue-600 font-bold text-white shrink-0 shadow-lg shadow-blue-500/25'
 })
 
+const iconSizeClass = computed(() => {
+  return props.size === 'sm' ? 'w-4.5 h-4.5' : 'w-5 h-5'
+})
+
 const textClass = computed(() => {
   let classes = 'tracking-wider '
   if (props.size === 'sm') {
@@ -49,10 +54,10 @@ const textClass = computed(() => {
 <template>
   <div class="flex items-center gap-3 overflow-hidden">
     <div :class="boxClass" class="flex items-center justify-center">
-      IA
+      <Boxes :class="iconSizeClass" class="text-white" />
     </div>
     <span v-if="showText" :class="textClass" class="whitespace-nowrap">
-      Inventory Application
+      InventoryKu
     </span>
   </div>
 </template>
