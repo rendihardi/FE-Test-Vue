@@ -1,5 +1,6 @@
-﻿<script setup>
+<script setup>
 import { ref, onMounted, watch } from 'vue'
+import { formatDateTime } from '../../utils/helpers'
 import { useRolesStore } from '../../store/roles'
 import { useToast } from '../../composables/useToast'
 import RoleFormModal from './RoleFormModal.vue'
@@ -168,7 +169,7 @@ const confirmDelete = async () => {
             <thead>
               <tr class="bg-slate-50 text-slate-400 uppercase font-bold border-b border-slate-150">
                 <th class="px-6 py-3.5 tracking-wider">Role Name</th>
-                <th class="px-6 py-3.5 tracking-wider">Guard Name</th>
+                <th class="px-6 py-3.5 tracking-wider">Created At</th>
                 <th class="px-6 py-3.5 tracking-wider text-right">Actions</th>
               </tr>
             </thead>
@@ -182,7 +183,7 @@ const confirmDelete = async () => {
                   <span class="w-2 h-2 rounded-full bg-blue-500"></span>
                   <span>{{ role.name }}</span>
                 </td>
-                <td class="px-6 py-4 text-slate-550 font-mono">{{ role.guard_name }}</td>
+                <td class="px-6 py-4 text-slate-500">{{ formatDateTime(role.created_at) }}</td>
                 <td class="px-6 py-4 text-right space-x-2.5">
                   <button 
                     @click="openDetail(role)"

@@ -75,7 +75,7 @@ const handleSubmit = async () => {
 
     let res
     if (props.editingUser) {
-      res = await usersStore.updateUser(props.editingUser.id, payload)
+      res = await usersStore.updateUser(props.editingUser.uuid, payload)
     } else {
       res = await usersStore.createUser(payload)
     }

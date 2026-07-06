@@ -56,7 +56,7 @@ defineEmits(['close'])
       <!-- User ID can be user.uuid or user.id depending on how it is key'd in database -->
       <AuditHistorySection 
         type="user" 
-        :id="user.id || user.uuid" 
+        :id="user.uuid" 
       />
 
     </div>

@@ -5,7 +5,7 @@ import { useAuthStore } from '../store/auth'
 import { useToast } from '../composables/useToast'
 import api from '../utils/api'
 import BrandLogo from '../components/BrandLogo.vue'
-import { Mail, Lock, Loader2, ArrowLeft } from '@lucide/vue'
+import { Mail, Lock, Loader2, ArrowLeft, Eye, EyeOff } from '@lucide/vue'
 
 const router = useRouter()
 const route = useRoute()
@@ -16,6 +16,7 @@ const email = ref('')
 const password = ref('')
 const isLoading = ref(false)
 const errors = ref({})
+const showPassword = ref(false)
 
 onMounted(() => {
   if (route.query.message === 'session_expired') {
@@ -185,17 +186,25 @@ const handleLogin = async () => {
                 <input
                   id="password"
                   v-model="password"
-                  type="password"
+                  :type="showPassword ? 'text' : 'password'"
                   autocomplete="current-password"
                   required
                   placeholder="••••••••"
                   :class="[
-                    'block w-full pl-10 pr-3 py-2.5 border rounded-xl text-slate-800 placeholder-slate-400 text-sm focus:outline-none transition-all bg-white',
+                    'block w-full pl-10 pr-10 py-2.5 border rounded-xl text-slate-800 placeholder-slate-400 text-sm focus:outline-none transition-all bg-white',
                     errors.password 
                       ? 'border-red-400 focus:ring-2 focus:ring-red-100 focus:border-red-400' 
                       : 'border-slate-200 focus:ring-2 focus:ring-blue-100 focus:border-blue-400'
                   ]"
                 />
+                <button
+                  type="button"
+                  @click="showPassword = !showPassword"
+                  class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 transition-colors"
+                >
+                  <Eye v-if="!showPassword" class="w-4 h-4" />
+                  <EyeOff v-else class="w-4 h-4" />
+                </button>
               </div>
               <p v-if="errors.password" class="mt-1.5 text-xs text-red-500 font-medium">{{ errors.password }}</p>
             </div>

@@ -21,19 +21,21 @@ const form = ref({
 })
 const errors = ref({})
 
-watch(() => props.editingRole, (newVal) => {
-  if (newVal) {
-    form.value = {
-      name: newVal.name,
-      guard_name: newVal.guard_name || 'sanctum'
+watch([() => props.isOpen, () => props.editingRole], ([isOpen, newVal]) => {
+  if (isOpen) {
+    if (newVal) {
+      form.value = {
+        name: newVal.name,
+        guard_name: newVal.guard_name || 'sanctum'
+      }
+    } else {
+      form.value = {
+        name: '',
+        guard_name: 'sanctum'
+      }
     }
-  } else {
-    form.value = {
-      name: '',
-      guard_name: 'sanctum'
-    }
+    errors.value = {}
   }
-  errors.value = {}
 }, { immediate: true })
 
 const handleSubmit = async () => {
@@ -98,13 +100,6 @@ const handleSubmit = async () => {
           :error="errors.name ? errors.name[0] : ''"
         />
 
-        <FormInput 
-          id="guard-name"
-          label="Guard Scope"
-          v-model="form.guard_name"
-          placeholder="sanctum"
-          :error="errors.guard_name ? errors.guard_name[0] : ''"
-        />
 
         <div class="flex items-center justify-end gap-3 pt-3 border-t border-slate-100">
           <button

@@ -1,4 +1,4 @@
-﻿<script setup>
+<script setup>
 import { ref, onMounted, watch } from 'vue'
 import { useUsersStore } from '../../store/users'
 import { useRolesStore } from '../../store/roles'
@@ -102,7 +102,7 @@ const openDelete = (user) => {
 const confirmDelete = async () => {
   isSubmitting.value = true
   try {
-    const res = await usersStore.deleteUser(selectedUser.value.id)
+    const res = await usersStore.deleteUser(selectedUser.value.uuid)
     if (res.success) {
       addToast('User account deleted successfully.', 'success')
       isDeleteOpen.value = false
@@ -195,7 +195,7 @@ const confirmDelete = async () => {
             <tbody class="divide-y divide-slate-100">
               <tr 
                 v-for="user in usersStore.users.value" 
-                :key="user.id"
+                :key="user.uuid"
                 class="hover:bg-slate-50/50 transition-colors"
               >
                 <td class="px-6 py-4 font-bold text-slate-900">{{ user.name }}</td>
